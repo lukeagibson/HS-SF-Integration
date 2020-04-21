@@ -238,4 +238,102 @@ mycursor.execute("INSERT INTO " + mySchema + ".job_log (job_name, source, catego
                                              "'HS_Contact_Step_1', 'Hiresmith', 'End', 'Success');")
 mydb.commit()
 
+
+
+
+
+
+
+# --- Set Modify Date for Company Notes from last run
+mycursor = mydb.cursor()
+mycursor.execute("SELECT max(timestamp) FROM " + mySchema + ".job_log WHERE job_name = 'HS_Company_Step_1' and "
+                                                            "category = 'Start' and source = 'Hiresmith' and status ="
+                                                            " 'Success';")
+
+modify_date_notes = str(mycursor.fetchall()[0][0]).replace(" ", "T")
+
+# --- Insert/Update New Notes Records from HireSmith to Intermediate Database ---
+# all notes data records in dictionary form modified after last batch run
+all_company_notes_data_by_date = custfunc.getAllCompanyNotesByDate(url, authHeader,
+                                                          modify_date_company)
+
+# Need to change Scripts
+script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer (hs_employer_id, employer_name, alternate_names, " \
+                                               "do_not_merge, sf_account_id, link_url, number_employees_name, " \
+                                               "website, account_manager_name, outreach_lead_name, " \
+                                               "outreach_priority_name, outreach_status, er_team_lead, ed_team_lead, " \
+                                               "employer_classification, outreach_settings_current_as_of, " \
+                                               "industries_name, create_date, modify_date, parent_id, " \
+                                               "parent_company_name, employer_city, employer_metro_area, " \
+                                               "employer_state, hash, status) "
+script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
+                   "%s, %s, %s, %s) "
+script_company_notes_3 = "ON DUPLICATE KEY UPDATE hs_employer_id = %s, employer_name = %s, alternate_names = %s, " \
+                   "do_not_merge = %s, sf_account_id = %s, link_url = %s, number_employees_name = %s, website = %s, " \
+                   "account_manager_name = %s, outreach_lead_name = %s, outreach_priority_name = %s, outreach_status " \
+                   "= %s, er_team_lead = %s, ed_team_lead = %s, employer_classification = %s, " \
+                   "outreach_settings_current_as_of = %s, industries_name = %s, create_date = %s, modify_date = %s, " \
+                   "parent_id = %s, parent_company_name = %s, employer_city = %s, employer_metro_area = %s, " \
+                   "employer_state = %s, hash = %s, status = %s "
+
+
+final_dict_company_notes = {}
+
+mycursor.execute(
+    "INSERT INTO " + mySchema + ".job_log (job_name, source, category, status) VALUES ('HS_Company_Notes_Step_1', "
+                                "'Hiresmith', 'Start', 'Success');")
+# exclusion_dict = []
+
+for key in sorted(all_company_notes_data_by_date):
+#    print(str(key) + " : " + str(all_company_notes_data_by_date[key]['IsAdminApproved']))
+#    if (all_company_data_by_date[key]['IsAdminApproved']):
+
+    print('Iteration started for key: ' + str(key))
+    # Python Rest API to fetch detailed company details
+    # ApprovedList.append(key)
+    key = str(key)
+    start = '12twenty.com/Api/V2/notes/'
+    getDataUrl = 'https://' + url + start + key
+    data = custfunc.ExceptionGet(getDataUrl, authHeader)  # REST call with Authentication header
+    data = data.json()
+    final_dict_company_notes[data['Id']] = data
+
+    key = int(key)
+
+    # Converting datetime object to string
+    dateTimeObj = datetime.now()
+    company_notes_dict_values = [key, final_dict_company_notes[key]['Name'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112355'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112902'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112498'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112499'],
+                        final_dict_company_notes[key]['NumberOfEmployeesName'], final_dict_company_notes[key]['Website'],
+                        final_dict_company_notes[key]['AccountManagerName'],
+                        final_dict_company_notes[key]['OutreachLeadName'],
+                        final_dict_company_notes[key]['OutreachPriorityName'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112926'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112908'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112925'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112927'],
+                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112928'],
+                        industry_value, final_dict_company_notes[key]['CreateDate'],
+                        final_dict_company_notes[key]['ModifyDate'], final_dict_company_notes[key]['ParentId'],
+                        final_dict_company_notes[key]['ParentCompanyName'], "", "", "", ""]
+
+    # SQL query to insert/update records from HireSmith to Intermediate Database
+    vals_company_notes = None
+    vals_company_notes = company_notes_dict_values + ['Insert'] + company_notes_dict_values + ['Update']
+    mycursor.execute(script_company_notes_1 + script_company_notes_2 + script_company_notes_3, vals_company)
+    mydb.commit()
+    print('Iteration ended for key: ' + str(key))
+
+#    else:
+#        print('Exception iteration for key: ' + str(key))
+#        exclusion_dict.append(key)
+
+mycursor.execute("INSERT INTO " + mySchema + ".job_log (job_name, source, category, status) VALUES ("
+                                             "'HS_Company_Step_1', 'Hiresmith', 'End', 'Success');")
+mydb.commit()
+
+
 ### END OF JOB 1
