@@ -284,6 +284,7 @@ mycursor.execute(
 for key in sorted(all_company_notes_data_by_date):
 #    print(str(key) + " : " + str(all_company_notes_data_by_date[key]['IsAdminApproved']))
 #    if (all_company_data_by_date[key]['IsAdminApproved']):
+# Need to check if references company that is not approved for debugging purposes
 
     print('Iteration started for key: ' + str(key))
     # Python Rest API to fetch detailed company details
