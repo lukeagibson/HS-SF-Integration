@@ -82,10 +82,37 @@ else:
 
 contacts_sql_fetch = mycursor.fetchall()
 
+
+
+
+# --- Set Modify Date for Company Notes from last run
+mycursor = mydb.cursor()
+mycursor.execute(
+    "SELECT max(timestamp) FROM " + mySchema + ".job_log WHERE job_name = 'HS_Company_Notes_Step_2' and category = 'Start' "
+                                               "and source = 'Hiresmith' and status = 'Success';")
+modify_date_company_notes = str(mycursor.fetchall()[0][0]).replace(" ", "T")
+
+# Fetch Company Notes Data from Intermediate Database
+
+if (str(modify_date_company_notes) != 'None'):
+
+    script_company_notes_fetch = "SELECT * FROM  " + mySchema + ".salesforce_employer_notes WHERE hiresmith_employer_notes.ModifyDate >="
+    mycursor.execute(script_company_notes_fetch + '\'' + modify_date_company_notes + '\'' + ';')
+else:
+
+    script_company_notes_fetch = "SELECT * FROM  " + mySchema + ".salesforce_employer"
+    mycursor.execute(script_company_notes_fetch + ';')
+
+company_notes_sql_fetch = mycursor.fetchall()
+
+
+
+
 # Get all records from HireSmith to check if exists
 
 all_company_data = custfunc.getAllCompanies(url, authHeader)  # all employer data records in dictionary
 all_contact_data = custfunc.getAllContacts(url, authHeader)  # all contacts data records in dictionary
+all_company_notes_data = custfunc.getAllCompanyNotes(url, authHeader)  # all contacts data records in dictionary
 
 # NULL RECORD CREATION BEGINS ----
 
@@ -114,6 +141,19 @@ for i in default_df_contact:
         for key in default_df_contact[i].keys():
             if key != 'AttributeId':
                 default_df_contact[i][key] = None
+
+# Company Notes default_df
+default_df_company_notes = all_company_notes_data[
+    list(all_company_notes_data.keys())[1]].copy()  # Fetching one record(dict) from all_company_notes_data_by_date
+
+# creating company notes record(format: dictionary) as defualt_df with NULL values
+for i in default_df_company_notes:
+    if type(default_df_company_notes[i]) != dict:
+        default_df_company_notes[i] = None
+    else:
+        for key in default_df_company_notes[i].keys():
+            if key != 'AttributeId':
+                default_df_company_notes[i][key] = None
 
 # NULL RECORD CREATION ENDS ----
 
