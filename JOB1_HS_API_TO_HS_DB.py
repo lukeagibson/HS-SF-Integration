@@ -258,23 +258,20 @@ all_company_notes_data_by_date = custfunc.getAllCompanyNotesByDate(url, authHead
                                                           modify_date_company)
 
 # Need to change Scripts
-script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer (hs_employer_id, employer_name, alternate_names, " \
-                                               "do_not_merge, sf_account_id, link_url, number_employees_name, " \
-                                               "website, account_manager_name, outreach_lead_name, " \
-                                               "outreach_priority_name, outreach_status, er_team_lead, ed_team_lead, " \
-                                               "employer_classification, outreach_settings_current_as_of, " \
-                                               "industries_name, create_date, modify_date, parent_id, " \
-                                               "parent_company_name, employer_city, employer_metro_area, " \
-                                               "employer_state, hash, status) "
-script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
-                   "%s, %s, %s, %s) "
-script_company_notes_3 = "ON DUPLICATE KEY UPDATE hs_employer_id = %s, employer_name = %s, alternate_names = %s, " \
-                   "do_not_merge = %s, sf_account_id = %s, link_url = %s, number_employees_name = %s, website = %s, " \
-                   "account_manager_name = %s, outreach_lead_name = %s, outreach_priority_name = %s, outreach_status " \
-                   "= %s, er_team_lead = %s, ed_team_lead = %s, employer_classification = %s, " \
-                   "outreach_settings_current_as_of = %s, industries_name = %s, create_date = %s, modify_date = %s, " \
-                   "parent_id = %s, parent_company_name = %s, employer_city = %s, employer_metro_area = %s, " \
-                   "employer_state = %s, hash = %s, status = %s "
+script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_note (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
+                                               "AssociatedEntityType1Id, AssociatedEntity1Id, AssociatedEntityType2Id, AssociatedEntity2Id, " \
+                                               "Text, Date, StudentNoteTypeId, " \
+                                               "StudentNoteTypeName, CompanyNoteTypeId, CompanyNoteTypeName, OwnerId, " \
+                                               "OwnerName, CreatorName, " \
+                                               "FileId, FileName, VisibilityId, CampaignIds, " \
+                                               "ModifyDate) "
+script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+script_company_notes_3 = "ON DUPLICATE KEY UPDATE employer_note_Id = %s, PrimaryEntityTypeId = %s, PrimaryEntityId = %s, " \
+                   "AssociatedEntityType1Id = %s, AssociatedEntity1Id = %s, AssociatedEntityType2Id = %s, AssociatedEntity2Id = %s, Text = %s, " \
+                   "Date = %s, StudentNoteTypeId = %s, StudentNoteTypeName = %s, CompanyNoteTypeId " \
+                   "= %s, CompanyNoteTypeName = %s, OwnerId = %s, OwnerName = %s, " \
+                   "CreatorName = %s, FileId = %s, FileName = %s, VisibilityId = %s, " \
+                   "CampaignIds = %s, ModifyDate = %s"
 
 
 final_dict_company_notes = {}
@@ -302,23 +299,26 @@ for key in sorted(all_company_notes_data_by_date):
 
     # Converting datetime object to string
     dateTimeObj = datetime.now()
-    company_notes_dict_values = [key, final_dict_company_notes[key]['Name'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112355'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112902'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112498'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112499'],
-                        final_dict_company_notes[key]['NumberOfEmployeesName'], final_dict_company_notes[key]['Website'],
-                        final_dict_company_notes[key]['AccountManagerName'],
-                        final_dict_company_notes[key]['OutreachLeadName'],
-                        final_dict_company_notes[key]['OutreachPriorityName'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112926'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112908'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112925'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112927'],
-                        final_dict_company_notes[key]['CustomAttributeValues']['custom_attribute_10888805112928'],
-                        industry_value, final_dict_company_notes[key]['CreateDate'],
-                        final_dict_company_notes[key]['ModifyDate'], final_dict_company_notes[key]['ParentId'],
-                        final_dict_company_notes[key]['ParentCompanyName'], "", "", "", ""]
+    company_notes_dict_values = [key, final_dict_company_notes[key]['PrimaryEntityTypeID'],
+                        final_dict_company_notes[key]['PrimaryEntityID'],
+                        final_dict_company_notes[key]['AssociatedEntityType1Id'],
+                        final_dict_company_notes[key]['AssociatedEntity1Id'],
+                        final_dict_company_notes[key]['AssociatedEntityType2Id'],
+                        final_dict_company_notes[key]['AssociatedEntity2Id'],
+                        final_dict_company_notes[key]['Text'],
+                        final_dict_company_notes[key]['Date'],
+                        final_dict_company_notes[key]['StudentNoteTypeId'],
+                        final_dict_company_notes[key]['StudentNoteTypeName'],
+                        final_dict_company_notes[key]['CompanyNoteTypeId'],
+                        final_dict_company_notes[key]['CompanyNoteTypeName'],
+                        final_dict_company_notes[key]['OwnerId'],
+                        final_dict_company_notes[key]['OwnerName'],
+                        final_dict_company_notes[key]['CreatorName'],
+                        final_dict_company_notes[key]['FileId'],
+                        final_dict_company_notes[key]['FileName'],
+                        final_dict_company_notes[key]['VisibilityId'],
+                        final_dict_company_notes[key]['CampaignIds'],
+                        final_dict_company_notes[key]['ModifyDate']]
 
     # SQL query to insert/update records from HireSmith to Intermediate Database
     vals_company_notes = None
@@ -332,7 +332,7 @@ for key in sorted(all_company_notes_data_by_date):
 #        exclusion_dict.append(key)
 
 mycursor.execute("INSERT INTO " + mySchema + ".job_log (job_name, source, category, status) VALUES ("
-                                             "'HS_Company_Step_1', 'Hiresmith', 'End', 'Success');")
+                                             "'HS_Company_Notes_Step_1', 'Hiresmith', 'End', 'Success');")
 mydb.commit()
 
 

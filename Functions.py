@@ -404,6 +404,45 @@ def getAllContactNotesByDate(url,authHeader,modify_date_input):
             all_notes_data_by_date = CreateDicofNotes(data,all_notes_data_by_date)
     return(all_notes_data_by_date)
 
+    
+def getAllCompanyNotes(url,authHeader):
+    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2201&PageSize=500'
+    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
+    data = data.json()
+    all_company_notes_data = {}
+    all_company_notes_data = CreateDicofCompanyNotes(data,all_company_notes_data)
+    
+    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
+    
+    if 'Total' and 'PageSize' in data:
+        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
+        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
+        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
+            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
+            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
+            data = data.json()
+            all_company_notes_data = CreateDicofNotes(data,all_company_notes_data)
+    return(all_company_notes_data)
+    
+def getAllContactNotes(url,authHeader):
+    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2301&PageSize=500'
+    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
+    data = data.json()
+    all_contact_notes_data = {}
+    all_contact_notes_data = CreateDicofContactNotes(data,all_contact_notes_data)
+    
+    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
+    
+    if 'Total' and 'PageSize' in data:
+        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
+        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
+        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
+            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
+            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
+            data = data.json()
+            all_contact_notes_data = CreateDicofNotes(data,all_contact_notes_data)
+    return(all_contact_notes_data)
+
 
 def CreateDicofNotes(data,all_notes_data):
     for indx,value in enumerate(data['Items']):
