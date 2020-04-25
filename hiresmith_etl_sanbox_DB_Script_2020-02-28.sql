@@ -70,6 +70,10 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hiresmith_employer` (
   `hash` VARCHAR(500) NULL DEFAULT NULL,
   `status` VARCHAR(50) NULL DEFAULT NULL,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastOCIDate` DATETIME NULL,
+  `LastJobPostingDATe` DATETIME NULL,
+  `Last12TwentyGPSpostingDate` DATETIME NULL,
+  
   PRIMARY KEY (`hs_employer_id`),
   UNIQUE INDEX `hs_link_idx` (`link_url` ASC),
   UNIQUE INDEX `sf_account_id_idx` (`sf_account_id` ASC),
@@ -497,6 +501,74 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`translation_lookup` (
   `sf_value` VARCHAR(255) NULL DEFAULT NULL,
   INDEX `hs_id_idx` (`hs_id` ASC),
   INDEX `sf_id_idx` (`sf_id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_contact_note` (
+  `employer_note_Id` BIGINT(20) NOT NULL,
+  `PrimaryEntityTypeId` INT NOT NULL,
+  `AssociatedEntityType1Id` INT NULL,
+  `AssociatedEntity1Id` BIGINT(20) NULL,
+  `AssociatedEntityType2Id` INT NULL,
+  `AssociatedEntity2Id` INT NULL,
+  `Text` LONGTEXT NULL,
+  `Date` DATETIME NULL,
+  `StudentNoteTypeId` VARCHAR(45) NULL,
+  `StudentNoteTypeName` VARCHAR(45) NULL,
+  `CompanyNoteTypeId` INT NULL,
+  `CompanyNoteTypeName` VARCHAR(45) NULL,
+  `OwnerId` VARCHAR(45) NULL,
+  `OwnerName` VARCHAR(45) NULL,
+  `CreatorName` VARCHAR(45) NULL,
+  `FileId` VARCHAR(45) NULL,
+  `FileName` VARCHAR(45) NULL,
+  `VisibilityId` VARCHAR(45) NULL,
+  `CampaignIds` VARCHAR(500) NULL,
+  `ModifyDate` DATETIME NULL,
+  `PrimaryEntityId` BIGINT(20) NOT NULL,
+   `status` VARCHAR(50) NULL DEFAULT NULL,
+  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`employer_note_Id`),
+  INDEX `hs_note_contact_idx` (`PrimaryEntityId` ASC) VISIBLE,
+  CONSTRAINT `fk_hs_contact_note_hiresmith_contact1`
+    FOREIGN KEY (`PrimaryEntityId`)
+    REFERENCES `hiresmith_etl_sandbox`.`hiresmith_contact` (`hs_contact_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_employer_note` (
+  `employer_note_Id` BIGINT(20) NOT NULL,
+  `PrimaryEntityTypeId` INT NOT NULL,
+  `PrimaryEntityId` BIGINT(20) NOT NULL,
+  `AssociatedEntityType1Id` INT NULL,
+  `AssociatedEntity1Id` INT NULL,
+  `AssociatedEntityType2Id` INT NULL,
+  `AssociatedEntity2Id` INT NULL,
+  `Text` LONGTEXT NULL,
+  `Date` DATETIME NULL,
+  `StudentNoteTypeId` VARCHAR(45) NULL,
+	`StudentNoteTypeName` VARCHAR(45) NULL,
+  `CompanyNoteTypeId` INT NULL,
+  `CompanyNoteTypeName` VARCHAR(45) NULL,
+  `OwnerId` VARCHAR(45) NULL,
+  `OwnerName` VARCHAR(45) NULL,
+  `CreatorName` VARCHAR(45) NULL,
+  `FileId` VARCHAR(45) NULL,
+  `FileName` VARCHAR(45) NULL,
+  `VisibilityId` VARCHAR(45) NULL,
+  `CampaignIds` VARCHAR(500) NULL,
+  `ModifyDate` DATETIME NOT NULL,
+  `status` VARCHAR(50) NULL DEFAULT NULL,
+  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`employer_note_Id`),
+  INDEX `employer_note_hs_employer_idx` (`PrimaryEntityId` ASC),
+  CONSTRAINT `fk_employer_note_hiresmith_employer`
+    FOREIGN KEY (`PrimaryEntityId`)
+    REFERENCES `hiresmith_etl_sandbox`.`hiresmith_employer` (`hs_employer_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
