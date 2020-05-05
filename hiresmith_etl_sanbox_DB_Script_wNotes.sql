@@ -506,8 +506,9 @@ DEFAULT CHARACTER SET = latin1;
 
 
 CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_contact_note` (
-  `employer_note_Id` BIGINT(20) NOT NULL,
+  `contact_note_Id` BIGINT(20) NOT NULL,
   `PrimaryEntityTypeId` INT NOT NULL,
+  `PrimaryEntityId` BIGINT(20) NOT NULL,
   `AssociatedEntityType1Id` INT NULL,
   `AssociatedEntity1Id` BIGINT(20) NULL,
   `AssociatedEntityType2Id` INT NULL,
@@ -526,16 +527,17 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_contact_note` (
   `VisibilityId` VARCHAR(45) NULL,
   `CampaignIds` VARCHAR(500) NULL,
   `ModifyDate` DATETIME NULL,
-  `PrimaryEntityId` BIGINT(20) NOT NULL,
-   `status` VARCHAR(50) NULL DEFAULT NULL,
+  `status` VARCHAR(50) NULL DEFAULT NULL,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`employer_note_Id`),
+  PRIMARY KEY (`contact_note_Id`),
   INDEX `hs_note_contact_idx` (`PrimaryEntityId` ASC) VISIBLE,
   CONSTRAINT `fk_hs_contact_note_hiresmith_contact1`
+    FOREIGN KEY (`AssociatedEntity1Id`)
+    REFERENCES `hiresmith_etl_sandbox`.`hiresmith_contact` (`hs_contact_id`), 
+  CONSTRAINT `fk_hs_contact_note_hiresmith_employer`
     FOREIGN KEY (`PrimaryEntityId`)
-    REFERENCES `hiresmith_etl_sandbox`.`hiresmith_contact` (`hs_contact_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `hiresmith_etl_sandbox`.`hiresmith_employer` (`hs_employer_id`)
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
