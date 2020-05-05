@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hiresmith_employer` (
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `LastOCIDate` DATETIME NULL,
   `LastJobPostingDATe` DATETIME NULL,
-  `Last12TwentyGPSpostingDate` DATETIME NULL,
+  `LastRecruitingEventDate` DATETIME NULL,
   
   PRIMARY KEY (`hs_employer_id`),
   UNIQUE INDEX `hs_link_idx` (`link_url` ASC),
