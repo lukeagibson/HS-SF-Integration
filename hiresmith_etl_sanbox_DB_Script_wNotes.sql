@@ -509,12 +509,10 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_contact_note` (
   `contact_note_Id` BIGINT(20) NOT NULL,
   `PrimaryEntityTypeId` INT NOT NULL,
   `PrimaryEntityId` BIGINT(20) NOT NULL,
-  `AssociatedEntityType1Id` INT NOT NULL,
-  `AssociatedEntity1Id` BIGINT(20) NOT NULL,
-  `AssociatedEntityType2Id` INT NULL,
-  `AssociatedEntity2Id` INT NULL,
-  `Text` LONGTEXT NULL,
-  `Date` DATETIME NULL,
+  `AssociatedEntityType1Id` INT NULL,
+  `AssociatedEntity1Id` BIGINT(20) NULL,
+  `Text` LONGTEXT NOT NULL,
+  `Date` DATETIME NOT NULL,
   `StudentNoteTypeId` VARCHAR(45) NULL,
   `StudentNoteTypeName` VARCHAR(45) NULL,
   `CompanyNoteTypeId` INT NULL,
@@ -526,16 +524,16 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_contact_note` (
   `FileName` VARCHAR(45) NULL,
   `VisibilityId` VARCHAR(45) NULL,
   `CampaignIds` VARCHAR(500) NULL,
-  `ModifyDate` DATETIME NULL,
+  `ModifyDate` DATETIME NOT NULL,
   `status` VARCHAR(50) NULL DEFAULT NULL,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`contact_note_Id`),
   INDEX `hs_note_contact_idx` (`PrimaryEntityId` ASC) VISIBLE,
   CONSTRAINT `fk_hs_contact_note_hiresmith_contact1`
-    FOREIGN KEY (`AssociatedEntity1Id`)
+    FOREIGN KEY (`PrimaryEntityId`)
     REFERENCES `hiresmith_etl_sandbox`.`hiresmith_contact` (`hs_contact_id`), 
   CONSTRAINT `fk_hs_contact_note_hiresmith_employer`
-    FOREIGN KEY (`PrimaryEntityId`)
+    FOREIGN KEY (`AssociatedEntity1Id`)
     REFERENCES `hiresmith_etl_sandbox`.`hiresmith_employer` (`hs_employer_id`)
   )
 ENGINE = InnoDB
@@ -546,14 +544,10 @@ CREATE TABLE IF NOT EXISTS `hiresmith_etl_sandbox`.`hs_employer_note` (
   `employer_note_Id` BIGINT(20) NOT NULL,
   `PrimaryEntityTypeId` INT NOT NULL,
   `PrimaryEntityId` BIGINT(20) NOT NULL,
-  `AssociatedEntityType1Id` INT NULL,
-  `AssociatedEntity1Id` INT NULL,
-  `AssociatedEntityType2Id` INT NULL,
-  `AssociatedEntity2Id` INT NULL,
-  `Text` LONGTEXT NULL,
-  `Date` DATETIME NULL,
+  `Text` LONGTEXT NOT NULL,
+  `Date` DATETIME NOT NULL,
   `StudentNoteTypeId` VARCHAR(45) NULL,
-	`StudentNoteTypeName` VARCHAR(45) NULL,
+  `StudentNoteTypeName` VARCHAR(45) NULL,
   `CompanyNoteTypeId` INT NULL,
   `CompanyNoteTypeName` VARCHAR(45) NULL,
   `OwnerId` VARCHAR(45) NULL,
