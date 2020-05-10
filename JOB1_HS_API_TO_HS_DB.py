@@ -264,14 +264,14 @@ script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_note (
                                                "StudentNoteTypeName, CompanyNoteTypeId, CompanyNoteTypeName, OwnerId, " \
                                                "OwnerName, CreatorName, " \
                                                "FileId, FileName, VisibilityId, CampaignIds, " \
-                                               "ModifyDate) "
-script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                               "ModifyDate, hash, status) "
+script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 script_company_notes_3 = "ON DUPLICATE KEY UPDATE employer_note_Id = %s, PrimaryEntityTypeId = %s, PrimaryEntityId = %s, " \
                    "AssociatedEntityType1Id = %s, AssociatedEntity1Id = %s, AssociatedEntityType2Id = %s, AssociatedEntity2Id = %s, Text = %s, " \
                    "Date = %s, StudentNoteTypeId = %s, StudentNoteTypeName = %s, CompanyNoteTypeId " \
                    "= %s, CompanyNoteTypeName = %s, OwnerId = %s, OwnerName = %s, " \
                    "CreatorName = %s, FileId = %s, FileName = %s, VisibilityId = %s, " \
-                   "CampaignIds = %s, ModifyDate = %s"
+                   "CampaignIds = %s, ModifyDate = %s, hash = %s, status = %s"
 
 
 final_dict_company_notes = {}
@@ -319,7 +319,7 @@ for key in sorted(all_company_notes_data_by_date):
                         final_dict_company_notes[key]['FileName'],
                         final_dict_company_notes[key]['VisibilityId'],
                         final_dict_company_notes[key]['CampaignIds'],
-                        final_dict_company_notes[key]['ModifyDate']]
+                        final_dict_company_notes[key]['ModifyDate'], ""]
 
     # SQL query to insert/update records from HireSmith to Intermediate Database
     vals_company_notes = None

@@ -389,7 +389,7 @@ def getAllContactNotesByDate(url,authHeader,modify_date_input):
     getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2301&ModifyFromDate='+modify_date_input+'&PageSize=500'
     data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
     data = data.json()
-    all_botes_data_by_date = {}
+    all_notes_data_by_date = {}
     all_notes_data_by_date = CreateDicofNotes(data,all_notes_data_by_date)
     
     #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
@@ -449,6 +449,5 @@ def CreateDicofNotes(data,all_notes_data):
         if('Id' in value):
             all_notes_data [value['Id']] = value
     return all_notes_data
-
 
 # end of function definations. 
