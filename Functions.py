@@ -366,6 +366,10 @@ def removeDuplicateStudentGroups(list_for_removal):
     return (list_to_return)
 
 
+
+# --- Start Notes Functions ---
+
+
 def getAllCompanyNotesByDate(url,authHeader,modify_date_input):
     getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2201&ModifyFromDate='+modify_date_input+'&PageSize=500'
     data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
