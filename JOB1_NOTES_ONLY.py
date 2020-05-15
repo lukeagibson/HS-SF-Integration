@@ -42,7 +42,7 @@ all_company_notes_data_by_date = custfunc.getAllCompanyNotesByDate(url, authHead
                                                           modify_date_company)
 
 # Need to change Scripts
-script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_note (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
+script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_notes (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
                                                "Text, Date, StudentNoteTypeId, " \
                                                "StudentNoteTypeName, CompanyNoteTypeId, CompanyNoteTypeName, OwnerId, " \
                                                "OwnerName, CreatorName, " \
@@ -123,7 +123,7 @@ all_contact_notes_data_by_date = custfunc.getAllContactNotesByDate(url, authHead
                                                           modify_date_contact)
 
 
-script_contact_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_note (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
+script_contact_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_contact_notes (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
                                                "AssociatedEntityType1Id, AssociatedEntity1Id, " \
                                                "Text, Date, StudentNoteTypeId, " \
                                                "StudentNoteTypeName, CompanyNoteTypeId, CompanyNoteTypeName, OwnerId, " \
