@@ -261,19 +261,18 @@ all_company_notes_data_by_date = custfunc.getAllCompanyNotesByDate(url, authHead
 
 # Need to change Scripts
 script_company_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_note (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
-                                               "AssociatedEntityType1Id, AssociatedEntity1Id, AssociatedEntityType2Id, AssociatedEntity2Id, " \
                                                "Text, Date, StudentNoteTypeId, " \
                                                "StudentNoteTypeName, CompanyNoteTypeId, CompanyNoteTypeName, OwnerId, " \
                                                "OwnerName, CreatorName, " \
                                                "FileId, FileName, VisibilityId, CampaignIds, " \
-                                               "ModifyDate, hash, status) "
-script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                               "ModifyDate, status) "
+script_company_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 script_company_notes_3 = "ON DUPLICATE KEY UPDATE employer_note_Id = %s, PrimaryEntityTypeId = %s, PrimaryEntityId = %s, " \
-                   "AssociatedEntityType1Id = %s, AssociatedEntity1Id = %s, AssociatedEntityType2Id = %s, AssociatedEntity2Id = %s, Text = %s, " \
+                   "Text = %s, " \
                    "Date = %s, StudentNoteTypeId = %s, StudentNoteTypeName = %s, CompanyNoteTypeId " \
                    "= %s, CompanyNoteTypeName = %s, OwnerId = %s, OwnerName = %s, " \
                    "CreatorName = %s, FileId = %s, FileName = %s, VisibilityId = %s, " \
-                   "CampaignIds = %s, ModifyDate = %s, hash = %s, status = %s"
+                   "CampaignIds = %s, ModifyDate = %s, status = %s"
 
 
 final_dict_company_notes = {}
@@ -299,10 +298,6 @@ for key in sorted(all_company_notes_data_by_date):
     dateTimeObj = datetime.now()
     company_notes_dict_values = [key, final_dict_company_notes[key]['PrimaryEntityTypeID'],
                         final_dict_company_notes[key]['PrimaryEntityID'],
-                        final_dict_company_notes[key]['AssociatedEntityType1Id'],
-                        final_dict_company_notes[key]['AssociatedEntity1Id'],
-                        final_dict_company_notes[key]['AssociatedEntityType2Id'],
-                        final_dict_company_notes[key]['AssociatedEntity2Id'],
                         final_dict_company_notes[key]['Text'],
                         final_dict_company_notes[key]['Date'],
                         final_dict_company_notes[key]['StudentNoteTypeId'],
@@ -347,19 +342,19 @@ all_contact_notes_data_by_date = custfunc.getAllContactNotesByDate(url, authHead
 
 
 script_contact_notes_1 = "INSERT INTO " + mySchema + ".hiresmith_employer_note (employer_note_Id, PrimaryEntityTypeId, PrimaryEntityId, " \
-                                               "AssociatedEntityType1Id, AssociatedEntity1Id, AssociatedEntityType2Id, AssociatedEntity2Id, " \
+                                               "AssociatedEntityType1Id, AssociatedEntity1Id, " \
                                                "Text, Date, StudentNoteTypeId, " \
                                                "StudentNoteTypeName, CompanyNoteTypeId, CompanyNoteTypeName, OwnerId, " \
                                                "OwnerName, CreatorName, " \
                                                "FileId, FileName, VisibilityId, CampaignIds, " \
-                                               "ModifyDate, hash, status) "
+                                               "ModifyDate, status) "
 script_contact_notes_2 = "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 script_contact_notes_3 = "ON DUPLICATE KEY UPDATE employer_note_Id = %s, PrimaryEntityTypeId = %s, PrimaryEntityId = %s, " \
-                   "AssociatedEntityType1Id = %s, AssociatedEntity1Id = %s, AssociatedEntityType2Id = %s, AssociatedEntity2Id = %s, Text = %s, " \
+                   "AssociatedEntityType1Id = %s, AssociatedEntity1Id = %s, Text = %s, " \
                    "Date = %s, StudentNoteTypeId = %s, StudentNoteTypeName = %s, CompanyNoteTypeId " \
                    "= %s, CompanyNoteTypeName = %s, OwnerId = %s, OwnerName = %s, " \
                    "CreatorName = %s, FileId = %s, FileName = %s, VisibilityId = %s, " \
-                   "CampaignIds = %s, ModifyDate = %s, hash = %s, status = %s"
+                   "CampaignIds = %s, ModifyDate = %s, status = %s"
 
 
 final_dict_contact_notes = {}
@@ -388,8 +383,6 @@ for key in sorted(all_contact_notes_data_by_date):
                         final_dict_contact_notes[key]['PrimaryEntityID'],
                         final_dict_contact_notes[key]['AssociatedEntityType1Id'],
                         final_dict_contact_notes[key]['AssociatedEntity1Id'],
-                        final_dict_contact_notes[key]['AssociatedEntityType2Id'],
-                        final_dict_contact_notes[key]['AssociatedEntity2Id'],
                         final_dict_contact_notes[key]['Text'],
                         final_dict_contact_notes[key]['Date'],
                         final_dict_contact_notes[key]['StudentNoteTypeId'],
