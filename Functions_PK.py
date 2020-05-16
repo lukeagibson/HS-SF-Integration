@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Jun 13 14:55:36 2018
-@author: Utkarsh
 
-Edited on 5/12/20
-Editors: Luke, Punit
+@author: Utkarsh
 """
 
 import requests
@@ -12,6 +10,7 @@ import pandas as pd
 import math
 import sys
 import datetime
+import time
 #Starting of Function Definations
 
 #function to fetch information in json format from URL. URL should be passed as a parameter  
@@ -240,6 +239,12 @@ def CreateDicofContacts(data,all_company_data):
             all_company_data [value['Id']] = value
     return all_company_data
 
+def CreateDicofJobPostings(data,all_job_posting_data):
+    for indx,value in enumerate(data['Items']):
+        if('Id' in value):
+            all_job_posting_data [value['Id']] = value
+    return all_job_posting_data
+
 def getLookups(url,authHeader):
     getDataUrl = 'https://'+  url + '12twenty.com/api/v2/Lookups?PageSize=500'
     data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
@@ -354,158 +359,6 @@ def getAllContacts(url,authHeader):
             all_contact_data = CreateDicofContacts(data,all_contact_data)
     return(all_contact_data)
     
-
-def removeDuplicateStudentGroups(list_for_removal):
-    new_list_groups = {}
-    list_to_return = []
-    for x,y in enumerate(list_for_removal):
-        new_list_groups[y['Id']] = y['Name']
-    for key,value in new_list_groups.items():
-        d = {}
-        d['Id'] = key
-        d['Name'] = value
-        list_to_return.append(d)
-    return (list_to_return)
-
-
-
-# --- Start Phase 2 Functions ---
-
-
-def getAllCompanyNotesByDate(url,authHeader,modify_date_input):
-    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2201&ModifyFromDate='+modify_date_input+'&PageSize=500'
-    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
-    data = data.json()
-    all_notes_data_by_date = {}
-    all_notes_data_by_date = CreateDicofNotes(data,all_notes_data_by_date)
-    
-    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
-    
-    if 'Total' and 'PageSize' in data:
-        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
-        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
-        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
-            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
-            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
-            data = data.json()
-            all_notes_data_by_date = CreateDicofNotes(data,all_notes_data_by_date)
-    return(all_notes_data_by_date)
-
-def getAllContactNotesByDate(url,authHeader,modify_date_input):
-    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2301&ModifyFromDate='+modify_date_input+'&PageSize=500'
-    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
-    data = data.json()
-    all_notes_data_by_date = {}
-    all_notes_data_by_date = CreateDicofNotes(data,all_notes_data_by_date)
-    
-    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
-    
-    if 'Total' and 'PageSize' in data:
-        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
-        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
-        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
-            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
-            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
-            data = data.json()
-            all_notes_data_by_date = CreateDicofNotes(data,all_notes_data_by_date)
-    return(all_notes_data_by_date)
-
-    
-def getAllCompanyNotes(url,authHeader):
-    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2201&PageSize=500'
-    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
-    data = data.json()
-    all_company_notes_data = {}
-    all_company_notes_data = CreateDicofNotes(data,all_company_notes_data)
-    
-    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
-    
-    if 'Total' and 'PageSize' in data:
-        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
-        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
-        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
-            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
-            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
-            data = data.json()
-            all_company_notes_data = CreateDicofNotes(data,all_company_notes_data)
-    return(all_company_notes_data)
-    
-def getAllContactNotes(url,authHeader):
-    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Notes?EntityTypeId=2301&PageSize=500'
-    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
-    data = data.json()
-    all_contact_notes_data = {}
-    all_contact_notes_data = CreateDicofNotes(data,all_contact_notes_data)
-    
-    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
-    
-    if 'Total' and 'PageSize' in data:
-        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
-        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
-        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
-            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
-            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
-            data = data.json()
-            all_contact_notes_data = CreateDicofNotes(data,all_contact_notes_data)
-    return(all_contact_notes_data)
-
-
-def CreateDicofNotes(data,all_notes_data):
-    for indx,value in enumerate(data['Items']):
-        if('Id' in value):
-            all_notes_data [value['Id']] = value
-    return all_notes_data
-
-def CreateDicofRecEvents(data,rec_events_data):
-    for indx,value in enumerate(data['Items']):
-        if('Id' in value):
-            rec_events_data [value['Id']] = value
-    return rec_events_data
-
-def CreateDicofJobPostings(data,all_job_posting_data):
-    for indx,value in enumerate(data['Items']):
-        if('Id' in value):
-            all_job_posting_data [value['Id']] = value
-    return all_job_posting_data
-
-def getAllRecruitingEventsByDate(url,authHeader,modify_date_input):
-    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Events?EventTypeIds=100004010103&ModifyFromDate='+modify_date_input+'&PageSize=500'
-    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
-    data = data.json()
-    rec_events_data_by_date = {}
-    rec_events_data_by_date = CreateDicofRecEvents(data,rec_events_data_by_date)
-    
-    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
-    
-    if 'Total' and 'PageSize' in data:
-        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
-        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
-        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
-            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
-            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
-            data = data.json()
-            rec_events_data_by_date = CreateDicofNotes(data,rec_events_data_by_date)
-    return(rec_events_data_by_date)    
-
-def getAllRecruitingEvents(url,authHeader):
-    getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/Events?EventTypeIds=100004010103&PageSize=500'
-    data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
-    data = data.json()
-    rec_events_data = {}
-    rec_events_data = CreateDicofRecEvents(data,rec_events_data)
-    
-    #The code below checks the nummber of pages of data that is fetched from the query and does GET calls to fetch the data from each respective page. 
-    
-    if 'Total' and 'PageSize' in data:
-        LoopLength = int(data['Total'])/int(data['PageSize']) #calculating the number of calls that will fetch all the data.
-        LoopLength = math.ceil(LoopLength) #rounding the value to highest closest integer.
-        for i in range(2,LoopLength+1): #looping over to fetch data from different pages. 
-            getDataUrl2 = getDataUrl + '&PageNumber=' + str(i) #building seachparameters with the page number. 
-            data = ExceptionGet(getDataUrl2,authHeader) # get Call to fetch data from 12-20
-            data = data.json()
-            rec_events_data = CreateDicofNotes(data,rec_events_data)
-    return(rec_events_data)      
-
 def getAllJobPostings(url,authHeader):
     getDataUrl = 'https://'+  url + '12twenty.com/Api/V2/job-postings?PageSize=500'
     data = ExceptionGet(getDataUrl,authHeader)  #REST call with Authentication header
@@ -545,7 +398,17 @@ def getAllJobPostingsByDate(url,authHeader,modify_date_input):
             time.sleep(3)
     return(all_job_posting_data_by_date)
 
-
+def removeDuplicateStudentGroups(list_for_removal):
+    new_list_groups = {}
+    list_to_return = []
+    for x,y in enumerate(list_for_removal):
+        new_list_groups[y['Id']] = y['Name']
+    for key,value in new_list_groups.items():
+        d = {}
+        d['Id'] = key
+        d['Name'] = value
+        list_to_return.append(d)
+    return (list_to_return)
 
 
 # end of function definations. 
